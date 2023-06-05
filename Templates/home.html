@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Trouble Ticket Management Dashboard</title>
+    <!-- Include necessary CSS stylesheets -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">
+            <i class="fas fa-chart-bar"></i>
+            Main Dashboard
+        </a>
+    </nav>
+    <div class="wrapper">
+        <div class="sidebar">
+            <ul>
+                <li>
+                    <a href="https://matsing-rmaplatform.com" target="_blank">
+                        <i class="fas fa-clipboard-check"></i>
+                        <span>RMA Platform</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://matsing-techsupport.com" target="_blank">
+                        <i class="fas fa-headset"></i>
+                        <span>Tech Support Tool</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://matsing-trials.com" target="_blank">
+                        <i class="fas fa-flask"></i>
+                        <span>Trials Tracker</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://matsing-projects.com" target="_blank">
+                        <i class="fas fa-project-diagram"></i>
+                        <span>Projects Tracker</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">RMA's</h5>
+                            <table id="app1-table" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Year</th>
+                                        <th>Open</th>
+                                        <th>Resolved</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>100</td>
+                                        <td>25</td>
+                                        <td>75</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Tech Support Tickets</h5>
+                            <table id="app2-table" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Year</th>
+                                        <th>Open</th>
+                                        <th>Completed</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>75</td>
+                                        <td>10</td>
+                                        <td>65</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Projects</h5>
+                            <table id="app3-table" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Year</th>
+                                        <th>Open</th>
+                                        <th>Completed</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>50</td>
+                                        <td>5</td>
+                                        <td>45</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Trials</h5>
+                            <table id="app4-table" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Year</th>
+                                        <th>Open</th>
+                                        <th>Completed</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>120</td>
+                                        <td>30</td>
+                                        <td>90</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Include necessary JavaScript code -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <!-- Add your JavaScript code here -->
+    <script>
+        // Add your JavaScript code here
+    </script>
+</body>
+</html>
