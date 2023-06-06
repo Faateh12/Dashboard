@@ -1,13 +1,14 @@
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
+import datetime
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Faateh@localhost:5432/postgres'
 app.config['SQLALCHEMY_BINDS'] = {
-    'database1': 'postgresql://postgres:Faateh123@localhost:5432/development',
-    'database2': 'postgresql://postgres:Faateh123@localhost:5432/tech_support_test',
-    'database3': 'postgresql://postgres:Faateh123@localhost:5432/trials_test',
-    'database4': 'postgresql://postgres:Faateh123@localhost:5432/projects_test'
+    'database1': 'postgresql://Faateh:Faateh123@rma-tool-db.cwvdgyt4btit.us-east-1.rds.amazonaws.com:5432/rma_tool_db',
+    'database2': 'postgresql://postgres:test1234@test-db.cwvdgyt4btit.us-east-1.rds.amazonaws.com:5432/test_db',
+    'database3': 'postgresql://Faateh:Faateh123@trials-db.cwvdgyt4btit.us-east-1.rds.amazonaws.com:5432/test_db',
+    'database4': 'postgresql://Faateh:Faateh123@projects-db.cwvdgyt4btit.us-east-1.rds.amazonaws.com:5432/projecttool_db'
 }
 db = SQLAlchemy(app)
 
@@ -156,12 +157,45 @@ class Projects(db.Model):
     notes = db.Column(db.String(1000))
     last_updated = db.Column(db.String(500))
 
+
+
 @app.route('/')
 def hello_world():
-    # rows = RmaTool.query.all()
-    # for row in rows:
-    #     print(row.MAT_RMA_ID)
-    return render_template("home.html")
+    current_year = datetime.datetime.now().year
+    open_rm_ids = db.session.query(RmaTool.MAT_RMA_ID) \
+        .filter_by(open_closed="Open") \
+        .all()
+    closed_rm_ids = db.session.query(RmaTool.MAT_RMA_ID) \
+        .filter_by(open_closed="Closed") \
+        .all()
+    completed_ticket_ids = db.session.query(TechSupport.ticket_id) \
+        .filter_by(status="Completed") \
+        .all()
+    all_tickets = TechSupport.query.all()
+    open_tickets_counter = len(all_tickets) - len(completed_ticket_ids)
+    open_rma_counter = sum(1 for item in open_rm_ids if item[0].split('-')[2] == str(current_year))
+    closed_rma_counter = sum(1 for item in closed_rm_ids if item[0].split('-')[2] == str(current_year))
+    completed_trial_ids = db.session.query(Trials.trial_id) \
+        .filter_by(trial_year=str(current_year)) \
+        .filter(Trials.status == "Closed") \
+        .all()
+    all_trial_ids = db.session.query(Trials.trial_id) \
+        .filter_by(trial_year=str(current_year)) \
+        .all()
+    completed_project_ids = db.session.query(Projects.project_id) \
+        .filter_by(project_year=str(current_year)) \
+        .filter(Projects.status == "Closed") \
+        .all()
+    open_project_ids = db.session.query(Projects.project_id) \
+        .filter_by(project_year=str(current_year)) \
+        .filter(Projects.status == "Open") \
+        .all()
+    open_trials_counter = len(all_trial_ids) - len(completed_trial_ids)
+    return render_template("home.html", open_rma_counter=open_rma_counter, current_year=current_year,
+                           closed_rma_counter=closed_rma_counter, completed_ticket_counter=len(completed_ticket_ids),
+                           open_tickets_counter=open_tickets_counter, completed_trial_ids=len(completed_trial_ids),
+                           open_trials_counter=open_trials_counter, completed_project_ids=len(completed_project_ids),
+                           open_project_ids=len(open_project_ids))
 
 
 

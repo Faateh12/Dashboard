@@ -12,7 +12,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">
-            <i class="fas fa-chart-bar"></i>
+            <i class="fas fa-chart-bar mr-2"></i>
             Main Dashboard
         </a>
     </nav>
@@ -33,7 +33,7 @@
                 </li>
                 <li>
                     <a href="https://matsing-trials.com" target="_blank">
-                        <i class="fas fa-flask"></i>
+                        <i class="fas fa-file"></i>
                         <span>Trials Tracker</span>
                     </a>
                 </li>
@@ -49,11 +49,11 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <div class="card mb-4">
+                    <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">RMA's</h5>
                             <table id="app1-table" class="table table-striped">
-                                <thead>
+                                <thead style="background-color: #e9ecef;">
                                     <tr>
                                         <th>Year</th>
                                         <th>Open</th>
@@ -62,9 +62,9 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>100</td>
-                                        <td>25</td>
-                                        <td>75</td>
+                                        <td>{{ current_year }}</td>
+                                        <td>{{ open_rma_counter }}</td>
+                                        <td>{{ closed_rma_counter }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -72,11 +72,11 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="card mb-4">
+                    <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Tech Support Tickets</h5>
                             <table id="app2-table" class="table table-striped">
-                                <thead>
+                                <thead style="background-color: #f5deb3;">
                                     <tr>
                                         <th>Year</th>
                                         <th>Open</th>
@@ -85,9 +85,9 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>75</td>
-                                        <td>10</td>
-                                        <td>65</td>
+                                        <td>{{ current_year }}</td>
+                                        <td>{{ open_tickets_counter }}</td>
+                                        <td>{{ completed_ticket_counter }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -97,11 +97,11 @@
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <div class="card mb-4">
+                    <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Projects</h5>
                             <table id="app3-table" class="table table-striped">
-                                <thead>
+                                <thead style="background-color: #ADD8E6;">
                                     <tr>
                                         <th>Year</th>
                                         <th>Open</th>
@@ -110,9 +110,9 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>50</td>
-                                        <td>5</td>
-                                        <td>45</td>
+                                        <td>{{ current_year }}</td>
+                                        <td>{{ open_project_ids }}</td>
+                                        <td>{{ completed_project_ids }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -120,11 +120,11 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="card mb-4">
+                    <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Trials</h5>
                             <table id="app4-table" class="table table-striped">
-                                <thead>
+                                <thead style="background-color: #D3D3D3">
                                     <tr>
                                         <th>Year</th>
                                         <th>Open</th>
@@ -133,9 +133,9 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>120</td>
-                                        <td>30</td>
-                                        <td>90</td>
+                                        <td>{{ current_year }}</td>
+                                        <td>{{ open_trials_counter }}</td>
+                                        <td>{{ completed_trial_ids }}</td>
                                     </tr>
                                 </tbody>
                             </table>

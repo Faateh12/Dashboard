@@ -48,6 +48,8 @@ body {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     transition: box-shadow 0.3s;
     background-color: #fff;
+    margin-right: 30px;
+    margin-bottom: 40px;
 }
 
 .card:hover {
@@ -72,7 +74,6 @@ th, td {
 }
 
 thead {
-    background-color: #e9ecef;
     font-weight: bold;
 }
 
@@ -102,5 +103,9 @@ tbody tr:hover {
 }
 
 .container {
-  margin-top: 50px;
+  margin-top: 60px;
+}
+
+.card-body {
+  padding: 2.75rem;
 }
