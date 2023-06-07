@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+
+  <!-- jQuery library -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+
+  <!-- Bootstrap JavaScript -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .card-login {
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      border: none;
+    }
+
+    .card-header {
+      background-color: #343a40;
+      color: #fff;
+      padding: 1rem;
+      border-bottom: none;
+    }
+
+    .nav-tabs .nav-item .nav-link {
+      color: #fff;
+    }
+
+    .nav-tabs .nav-item .nav-link.active {
+      background-color: #343a40;
+      border-color: #343a40;
+    }
+
+    .form-group label {
+      font-weight: bold;
+    }
+
+    .form-control:focus {
+      border-color: #343a40;
+      box-shadow: none;
+    }
+
+    .btn-primary {
+      background-color: #343a40;
+      border-color: #343a40;
+    }
+
+    .btn-primary:hover {
+      background-color: #23272b;
+      border-color: #23272b;
+    }
+
+    .btn-outline-secondary {
+      color: #343a40;
+      border-color: #343a40;
+    }
+
+    .btn-outline-secondary:hover {
+      color: #fff;
+      background-color: #343a40;
+      border-color: #343a40;
+    }
+
+    /* Custom Illustrations/Icons */
+    .illustration {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    /* Error Handling and Validation */
+    .form-error {
+      color: #dc3545;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">Company Dashboard</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Contact</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="container mt-5">
+    <div class="card mx-auto card-login" style="max-width: 400px;">
+      <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+          <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#login">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#register">Register</a>
+          </li>
+        </ul>
+      </div>
+      <div class="card-body">
+        <div class="tab-content">
+          <div class="tab-pane fade show active" id="login">
+            <h4 class="card-title">Login</h4>
+            <form>
+              <div class="form-group">
+                <label for="loginEmail">Email address</label>
+                <input type="email" class="form-control" id="loginEmail" placeholder="Enter email">
+              </div>
+              <div class="form-group">
+                <label for="loginPassword">Password</label>
+                <div class="input-group">
+                  <input type="password" class="form-control" id="loginPassword" placeholder="Password">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" id="loginShowPassword">Show</button>
+                  </div>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+          </div>
+          <div class="tab-pane fade" id="register">
+            <h4>Register</h4>
+            <form>
+              <div class="form-group">
+                <label for="registerName">Name</label>
+                <input type="text" class="form-control" id="registerName" placeholder="Enter name">
+              </div>
+              <div class="form-group">
+                <label for="registerEmail">Email address</label>
+                <input type="email" class="form-control" id="registerEmail" placeholder="Enter email">
+              </div>
+              <div class="form-group">
+                <label for="registerPassword">Password</label>
+                <div class="input-group">
+                  <input type="password" class="form-control" id="registerPassword" placeholder="Password">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" id="registerShowPassword">Show</button>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <div class="input-group">
+                  <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" id="confirmShowPassword">Show</button>
+                  </div>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Show/hide password functionality
+    $(document).ready(function() {
+      $("#loginShowPassword").click(function() {
+        var loginPassword = $("#loginPassword");
+        loginPassword.attr("type", loginPassword.attr("type") === "password" ? "text" : "password");
+        $(this).text($(this).text() === "Show" ? "Hide" : "Show");
+      });
+
+      $("#registerShowPassword").click(function() {
+        var registerPassword = $("#registerPassword");
+        registerPassword.attr("type", registerPassword.attr("type") === "password" ? "text" : "password");
+        $(this).text($(this).text() === "Show" ? "Hide" : "Show");
+      });
+
+      $("#confirmShowPassword").click(function() {
+        var confirmPassword = $("#confirmPassword");
+        confirmPassword.attr("type", confirmPassword.attr("type") === "password" ? "text" : "password");
+        $(this).text($(this).text() === "Show" ? "Hide" : "Show");
+      });
+    });
+  </script>
+</body>
+</html>

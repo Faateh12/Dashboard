@@ -20,25 +20,25 @@
         <div class="sidebar">
             <ul>
                 <li>
-                    <a href="https://matsing-rmaplatform.com" target="_blank">
+                    <a href="{{ url_for('app_login_rma') }}" target="_blank">
                         <i class="fas fa-clipboard-check"></i>
                         <span>RMA Platform</span>
                     </a>
                 </li>
                 <li>
-                    <a href="https://matsing-techsupport.com" target="_blank">
+                    <a href="{{ url_for('app_login_techsupport') }}" target="_blank">
                         <i class="fas fa-headset"></i>
                         <span>Tech Support Tool</span>
                     </a>
                 </li>
                 <li>
-                    <a href="https://matsing-trials.com" target="_blank">
+                    <a href="{{ url_for('app_login_trials') }}" target="_blank">
                         <i class="fas fa-file"></i>
                         <span>Trials Tracker</span>
                     </a>
                 </li>
                 <li>
-                    <a href="https://matsing-projects.com" target="_blank">
+                    <a href="{{ url_for('app_login_projects') }}" target="_blank">
                         <i class="fas fa-project-diagram"></i>
                         <span>Projects Tracker</span>
                     </a>
@@ -47,7 +47,32 @@
         </div>
 
         <div class="container">
-            <div class="row">
+            <div class="row" style="padding-top: 40px;">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Trials</h5>
+                            <table id="app4-table" class="table table-striped">
+                                <thead style="background-color: #D3D3D3">
+                                    <tr>
+                                        <th>Year</th>
+                                        <th>Open</th>
+                                        <th>Completed</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for year, count in trial_year_freq.items() %}
+                                      <tr>
+                                        <td>{{ year }}</td>
+                                        <td>{{ open_trials[year]|default(0) }}</td>
+                                        <td>{{ closed_trials[year]|default(0) }}</td>
+                                      </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-body">
@@ -61,34 +86,13 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>{{ current_year }}</td>
-                                        <td>{{ open_rma_counter }}</td>
-                                        <td>{{ closed_rma_counter }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Tech Support Tickets</h5>
-                            <table id="app2-table" class="table table-striped">
-                                <thead style="background-color: #f5deb3;">
-                                    <tr>
-                                        <th>Year</th>
-                                        <th>Open</th>
-                                        <th>Completed</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>{{ current_year }}</td>
-                                        <td>{{ open_tickets_counter }}</td>
-                                        <td>{{ completed_ticket_counter }}</td>
-                                    </tr>
+                                    {% for year, count in year_freq.items() %}
+                                      <tr>
+                                        <td>{{ year }}</td>
+                                        <td>{{ open_rmas[year]|default(0) }}</td>
+                                        <td>{{ closed_rmas[year]|default(0) }}</td>
+                                      </tr>
+                                  {% endfor %}
                                 </tbody>
                             </table>
                         </div>
@@ -109,11 +113,13 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>{{ current_year }}</td>
-                                        <td>{{ open_project_ids }}</td>
-                                        <td>{{ completed_project_ids }}</td>
-                                    </tr>
+                                    {% for year, count in project_year_freq.items() %}
+                                      <tr>
+                                        <td>{{ year }}</td>
+                                        <td>{{ open_projects[year]|default(0) }}</td>
+                                        <td>{{ closed_projects[year]|default(0) }}</td>
+                                      </tr>
+                                    {% endfor %}
                                 </tbody>
                             </table>
                         </div>
@@ -122,9 +128,9 @@
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Trials</h5>
-                            <table id="app4-table" class="table table-striped">
-                                <thead style="background-color: #D3D3D3">
+                            <h5 class="card-title">Tech Support Tickets</h5>
+                            <table id="app2-table" class="table table-striped">
+                                <thead style="background-color: #f5deb3;">
                                     <tr>
                                         <th>Year</th>
                                         <th>Open</th>
@@ -132,11 +138,13 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>{{ current_year }}</td>
-                                        <td>{{ open_trials_counter }}</td>
-                                        <td>{{ completed_trial_ids }}</td>
-                                    </tr>
+                                    {% for year, count in ticket_year_freq.items() %}
+                                      <tr>
+                                        <td>{{ year }}</td>
+                                        <td>{{ open_tickets[year]|default(0) }}</td>
+                                        <td>{{ closed_tickets[year]|default(0) }}</td>
+                                      </tr>
+                                    {% endfor %}
                                 </tbody>
                             </table>
                         </div>

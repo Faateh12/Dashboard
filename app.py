@@ -1,9 +1,11 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, request
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import datetime
+import jwt
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Faateh@localhost:5432/postgres'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Faateh123@localhost:5432/dashboard'
 app.config['SQLALCHEMY_BINDS'] = {
     'database1': 'postgresql://Faateh:Faateh123@rma-tool-db.cwvdgyt4btit.us-east-1.rds.amazonaws.com:5432/rma_tool_db',
     'database2': 'postgresql://postgres:test1234@test-db.cwvdgyt4btit.us-east-1.rds.amazonaws.com:5432/test_db',
@@ -11,6 +13,9 @@ app.config['SQLALCHEMY_BINDS'] = {
     'database4': 'postgresql://Faateh:Faateh123@projects-db.cwvdgyt4btit.us-east-1.rds.amazonaws.com:5432/projecttool_db'
 }
 db = SQLAlchemy(app)
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
+login_manager.login_message_category = 'info'
 
 class RmaTool(db.Model):
     __bind_key__ = 'database1'
@@ -119,6 +124,8 @@ class TechSupport(db.Model):
     resolution_date = db.Column(db.String(255))
     resolution_eta = db.Column(db.String(255))
     Priority = db.Column(db.String(255))
+    ticket_year = db.Column(db.String(100))
+    open_closed = db.Column(db.String(255))
 
 class Trials(db.Model):
     __bind_key__ = 'database3'
@@ -157,45 +164,211 @@ class Projects(db.Model):
     notes = db.Column(db.String(1000))
     last_updated = db.Column(db.String(500))
 
+class Users(UserMixin, db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(300))
+    password = db.Column(db.String(300))
+    name = db.Column(db.String(300))
 
 
-@app.route('/')
-def hello_world():
-    current_year = datetime.datetime.now().year
+@login_manager.user_loader
+def load_user(user_id):
+    return Users.query.get(int(user_id))
+
+def generate_token(user_email):
+    # Generate a JWT token
+    payload = {'user_email': user_email}
+    token = jwt.encode(payload, 'secret_key', algorithm='HS256')
+    return token
+
+
+
+
+@app.route('/rma-login')
+def app_login_rma():
+    email = "faateh.work@gmail.com"
+    token = generate_token(user_email=email)
+    link = f'https://matsing-rmaplatform.com/login?token={token}'
+    return redirect(link)
+
+@app.route('/techsupport-login')
+def app_login_techsupport():
+    email = "test123@gmail.com"
+    token = generate_token(user_email=email)
+    link = f'https://matsing-techsupport.com/?token={token}'
+    return redirect(link)
+
+@app.route('/trials-login')
+def app_login_trials():
+    email = "test123@gmail.com"
+    token = generate_token(user_email=email)
+    link = f'https://matsing-trials.com/?token={token}'
+    return redirect(link)
+
+@app.route('/projects-login')
+def app_login_projects():
+    email = "test123@gmail.com"
+    token = generate_token(user_email=email)
+    link = f'https://matsing-projects.com/?token={token}'
+    return redirect(link)
+
+@app.route('/', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        if 'loginEmail' in request.form and 'loginPassword' in request.form:
+            # Login request
+            login_email = request.form.get('loginEmail')
+            login_password = request.form.get('loginPassword')
+
+            # Process login data here (e.g., authenticate user)
+
+            # Redirect to a new page or perform other actions
+
+        elif 'registerName' in request.form and 'registerEmail' in request.form and 'registerPassword' in request.form:
+            # Registration request
+            register_name = request.form.get('registerName')
+            register_email = request.form.get('registerEmail')
+            register_password = request.form.get('registerPassword')
+
+            # Process registration data here (e.g., create a new user)
+
+            # Redirect to a new page or perform other actions
+
+    return render_template("login.html")
+
+@app.route('/home')
+def home():
+    # RMA Live counter
+    rmas = RmaTool.query.order_by(RmaTool.MAT_RMA_ID).all()
+    rma_id_list = []
+    for rma in rmas:
+        rma_id_list.append(rma.MAT_RMA_ID)
+    year_freq = {}
+    for item in rma_id_list:
+        year = item.split('-')[2]  # Extract the year from the ID
+        if year in year_freq:
+            year_freq[year] += 1  # Increment the count for the year
+        else:
+            year_freq[year] = 1  # Add the year to the dictionary with a count of 1
     open_rm_ids = db.session.query(RmaTool.MAT_RMA_ID) \
         .filter_by(open_closed="Open") \
         .all()
     closed_rm_ids = db.session.query(RmaTool.MAT_RMA_ID) \
         .filter_by(open_closed="Closed") \
         .all()
-    completed_ticket_ids = db.session.query(TechSupport.ticket_id) \
-        .filter_by(status="Completed") \
+    closed_rma_freq = {}
+    for item in closed_rm_ids:
+        id = item[0]
+        YEAR = id.split('-')[2]
+        if YEAR in closed_rma_freq:
+            closed_rma_freq[YEAR] += 1
+        else:
+            closed_rma_freq[YEAR] = 1
+    open_rma_freq = {}
+    for item in open_rm_ids:
+        id = item[0]
+        YEAR = id.split('-')[2]
+        if YEAR in open_rma_freq:
+            open_rma_freq[YEAR] += 1
+        else:
+            open_rma_freq[YEAR] = 1
+
+    # Trials live counter
+    trials = Trials.query.order_by(Trials.trial_id).all()
+    trial_year_list = [item.trial_year for item in trials if item.trial_year != '']
+    print(trial_year_list)
+    trial_year_freq = {}
+    for item in trial_year_list:
+        if item in trial_year_freq:
+            trial_year_freq[item] += 1  # Increment the count for the year
+        else:
+            trial_year_freq[item] = 1  # Add the year to the dictionary with a count of 1
+    open_trial_ids = db.session.query(Trials.trial_year) \
+        .filter_by(status="Open") \
         .all()
-    all_tickets = TechSupport.query.all()
-    open_tickets_counter = len(all_tickets) - len(completed_ticket_ids)
-    open_rma_counter = sum(1 for item in open_rm_ids if item[0].split('-')[2] == str(current_year))
-    closed_rma_counter = sum(1 for item in closed_rm_ids if item[0].split('-')[2] == str(current_year))
-    completed_trial_ids = db.session.query(Trials.trial_id) \
-        .filter_by(trial_year=str(current_year)) \
-        .filter(Trials.status == "Closed") \
+    closed_trial_ids = db.session.query(Trials.trial_year) \
+        .filter_by(status="Closed") \
         .all()
-    all_trial_ids = db.session.query(Trials.trial_id) \
-        .filter_by(trial_year=str(current_year)) \
+    closed_trial_freq = {}
+    for item in closed_trial_ids:
+        YEAR = item[0]
+        if YEAR in closed_trial_freq:
+            closed_trial_freq[YEAR] += 1
+        else:
+            closed_trial_freq[YEAR] = 1
+    open_trial_freq = {}
+    for item in open_trial_ids:
+        YEAR = item[0]
+        if YEAR in open_trial_freq:
+            open_trial_freq[YEAR] += 1
+        else:
+            open_trial_freq[YEAR] = 1
+
+    # Project live counter
+    projects = Projects.query.order_by(Projects.project_id).all()
+    project_year_list = [item.project_year for item in projects if item.project_year != '']
+    project_year_freq = {}
+    for item in project_year_list:
+        if item in project_year_freq:
+            project_year_freq[item] += 1  # Increment the count for the year
+        else:
+            project_year_freq[item] = 1  # Add the year to the dictionary with a count of 1
+    open_projects_ids = db.session.query(Projects.project_year) \
+        .filter_by(status="Open") \
         .all()
-    completed_project_ids = db.session.query(Projects.project_id) \
-        .filter_by(project_year=str(current_year)) \
-        .filter(Projects.status == "Closed") \
+    closed_project_ids = db.session.query(Projects.project_year) \
+        .filter_by(status="Closed") \
         .all()
-    open_project_ids = db.session.query(Projects.project_id) \
-        .filter_by(project_year=str(current_year)) \
-        .filter(Projects.status == "Open") \
+    closed_project_freq = {}
+    for item in closed_project_ids:
+        YEAR = item[0]
+        if YEAR in closed_project_freq:
+            closed_project_freq[YEAR] += 1
+        else:
+            closed_project_freq[YEAR] = 1
+    open_project_freq = {}
+    for item in open_projects_ids:
+        YEAR = item[0]
+        if YEAR in open_project_freq:
+            open_project_freq[YEAR] += 1
+        else:
+            open_project_freq[YEAR] = 1
+
+    # TechSupport live counter
+    tickets = TechSupport.query.order_by(TechSupport.ticket_id).all()
+    ticket_year_list = [item.ticket_year for item in tickets if item.ticket_year != '']
+    ticket_year_freq = {}
+    for item in ticket_year_list:
+        if item in ticket_year_freq:
+            ticket_year_freq[item] += 1  # Increment the count for the year
+        else:
+            ticket_year_freq[item] = 1  # Add the year to the dictionary with a count of 1
+    open_ticket_ids = db.session.query(TechSupport.ticket_year) \
+        .filter_by(open_closed="Open") \
         .all()
-    open_trials_counter = len(all_trial_ids) - len(completed_trial_ids)
-    return render_template("home.html", open_rma_counter=open_rma_counter, current_year=current_year,
-                           closed_rma_counter=closed_rma_counter, completed_ticket_counter=len(completed_ticket_ids),
-                           open_tickets_counter=open_tickets_counter, completed_trial_ids=len(completed_trial_ids),
-                           open_trials_counter=open_trials_counter, completed_project_ids=len(completed_project_ids),
-                           open_project_ids=len(open_project_ids))
+    closed_ticket_ids = db.session.query(TechSupport.ticket_year) \
+        .filter_by(open_closed="Closed") \
+        .all()
+    closed_ticket_freq = {}
+    for item in closed_ticket_ids:
+        YEAR = item[0]
+        if YEAR in closed_ticket_freq:
+            closed_ticket_freq[YEAR] += 1
+        else:
+            closed_ticket_freq[YEAR] = 1
+    open_ticket_freq = {}
+    for item in open_ticket_ids:
+        YEAR = item[0]
+        if YEAR in open_ticket_freq:
+            open_ticket_freq[YEAR] += 1
+        else:
+            open_ticket_freq[YEAR] = 1
+
+    return render_template("home.html", year_freq=year_freq, closed_rmas=closed_rma_freq, open_rmas=open_rma_freq,
+                           trial_year_freq=trial_year_freq, open_trials=open_trial_freq, closed_trials=closed_trial_freq,
+                           project_year_freq=project_year_freq, open_projects=open_project_freq, closed_projects=closed_project_freq,
+                           ticket_year_freq=ticket_year_freq, open_tickets=open_ticket_freq, closed_tickets=closed_ticket_freq,)
 
 
 
