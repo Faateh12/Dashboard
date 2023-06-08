@@ -4,17 +4,17 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 import datetime
 import jwt
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://Faateh:Faateh123@dashboard-db.cwvdgyt4btit.us-east-1.rds.amazonaws.com:5432/dashboard_db'
-app.config['SECRET_KEY'] = 'secret!'
-app.config['SQLALCHEMY_BINDS'] = {
+application = Flask(__name__)
+application.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://Faateh:Faateh123@dashboard-db.cwvdgyt4btit.us-east-1.rds.amazonaws.com:5432/dashboard_db'
+application.config['SECRET_KEY'] = 'secret!'
+application.config['SQLALCHEMY_BINDS'] = {
     'database1': 'postgresql://Faateh:Faateh123@rma-tool-db.cwvdgyt4btit.us-east-1.rds.amazonaws.com:5432/rma_tool_db',
     'database2': 'postgresql://postgres:test1234@test-db.cwvdgyt4btit.us-east-1.rds.amazonaws.com:5432/test_db',
     'database3': 'postgresql://Faateh:Faateh123@trials-db.cwvdgyt4btit.us-east-1.rds.amazonaws.com:5432/test_db',
     'database4': 'postgresql://Faateh:Faateh123@projects-db.cwvdgyt4btit.us-east-1.rds.amazonaws.com:5432/projecttool_db'
 }
-db = SQLAlchemy(app)
-login_manager = LoginManager(app)
+db = SQLAlchemy(application)
+login_manager = LoginManager(application)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 
@@ -183,7 +183,7 @@ def generate_token(user_email):
     token = jwt.encode(payload, 'secret_key', algorithm='HS256')
     return token
 
-@app.route('/logout')
+@application.route('/logout')
 @login_required
 def logout():
     logout_user()
@@ -191,7 +191,7 @@ def logout():
     return redirect(url_for('login'))
 
 
-@app.route('/rma-login')
+@application.route('/rma-login')
 def app_login_rma():
     current = current_user._get_current_object()
     email = current.email
@@ -199,7 +199,7 @@ def app_login_rma():
     link = f'https://matsing-rmaplatform.com/login?token={token}'
     return redirect(link)
 
-@app.route('/techsupport-login')
+@application.route('/techsupport-login')
 def app_login_techsupport():
     current = current_user._get_current_object()
     email = current.email
@@ -207,7 +207,7 @@ def app_login_techsupport():
     link = f'https://matsing-techsupport.com/?token={token}'
     return redirect(link)
 
-@app.route('/trials-login')
+@application.route('/trials-login')
 def app_login_trials():
     current = current_user._get_current_object()
     email = current.email
@@ -215,7 +215,7 @@ def app_login_trials():
     link = f'https://matsing-trials.com/?token={token}'
     return redirect(link)
 
-@app.route('/projects-login')
+@application.route('/projects-login')
 def app_login_projects():
     current = current_user._get_current_object()
     email = current.email
@@ -225,7 +225,7 @@ def app_login_projects():
 
 
 
-@app.route('/', methods=['GET', 'POST'])
+@application.route('/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         if 'loginEmail' in request.form and 'loginPassword' in request.form:
@@ -267,7 +267,7 @@ def login():
 
     return render_template("login.html")
 
-@app.route('/home')
+@application.route('/home')
 @login_required
 def home():
     # RMA Live counter
@@ -409,4 +409,4 @@ def home():
 
 
 if __name__ == '__main__':
-    app.run()
+    application.run()
