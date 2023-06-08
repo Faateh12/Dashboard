@@ -1,11 +1,12 @@
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import datetime
 import jwt
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Faateh123@localhost:5432/dashboard'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://Faateh:Faateh123@dashboard-db.cwvdgyt4btit.us-east-1.rds.amazonaws.com:5432/dashboard_db'
+app.config['SECRET_KEY'] = 'secret!'
 app.config['SQLALCHEMY_BINDS'] = {
     'database1': 'postgresql://Faateh:Faateh123@rma-tool-db.cwvdgyt4btit.us-east-1.rds.amazonaws.com:5432/rma_tool_db',
     'database2': 'postgresql://postgres:test1234@test-db.cwvdgyt4btit.us-east-1.rds.amazonaws.com:5432/test_db',
@@ -182,36 +183,47 @@ def generate_token(user_email):
     token = jwt.encode(payload, 'secret_key', algorithm='HS256')
     return token
 
-
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('You have been logged out!', 'success')
+    return redirect(url_for('login'))
 
 
 @app.route('/rma-login')
 def app_login_rma():
-    email = "faateh.work@gmail.com"
+    current = current_user._get_current_object()
+    email = current.email
     token = generate_token(user_email=email)
     link = f'https://matsing-rmaplatform.com/login?token={token}'
     return redirect(link)
 
 @app.route('/techsupport-login')
 def app_login_techsupport():
-    email = "test123@gmail.com"
+    current = current_user._get_current_object()
+    email = current.email
     token = generate_token(user_email=email)
     link = f'https://matsing-techsupport.com/?token={token}'
     return redirect(link)
 
 @app.route('/trials-login')
 def app_login_trials():
-    email = "test123@gmail.com"
+    current = current_user._get_current_object()
+    email = current.email
     token = generate_token(user_email=email)
     link = f'https://matsing-trials.com/?token={token}'
     return redirect(link)
 
 @app.route('/projects-login')
 def app_login_projects():
-    email = "test123@gmail.com"
+    current = current_user._get_current_object()
+    email = current.email
     token = generate_token(user_email=email)
     link = f'https://matsing-projects.com/?token={token}'
     return redirect(link)
+
+
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
@@ -222,6 +234,13 @@ def login():
             login_password = request.form.get('loginPassword')
 
             # Process login data here (e.g., authenticate user)
+            user = Users.query.filter_by(email=login_email).first()
+            # print(user.id)
+            if user and user.password == login_password:
+                login_user(user)
+                return redirect(url_for('home'))
+            else:
+                flash('Login unsuccessful. Please check your username and password.', 'danger')
 
             # Redirect to a new page or perform other actions
 
@@ -230,16 +249,32 @@ def login():
             register_name = request.form.get('registerName')
             register_email = request.form.get('registerEmail')
             register_password = request.form.get('registerPassword')
-
+            confirm_password = request.form.get('confirmPassword')
             # Process registration data here (e.g., create a new user)
+            if register_password == confirm_password:
+                user = Users(
+                    name=register_name,
+                    email=register_email,
+                    password=register_password
+                )
+                db.session.add(user)
+                db.session.commit()
+                flash('You have successfully created an account!')
+            else:
+                flash('Registration unsuccessful. Passwords Do Not Match!', 'danger')
 
             # Redirect to a new page or perform other actions
 
     return render_template("login.html")
 
 @app.route('/home')
+@login_required
 def home():
     # RMA Live counter
+    username = None
+    current = current_user._get_current_object()
+    if " " in current.name:
+        username = current.name.split(" ")[0].capitalize()
     rmas = RmaTool.query.order_by(RmaTool.MAT_RMA_ID).all()
     rma_id_list = []
     for rma in rmas:
@@ -368,7 +403,8 @@ def home():
     return render_template("home.html", year_freq=year_freq, closed_rmas=closed_rma_freq, open_rmas=open_rma_freq,
                            trial_year_freq=trial_year_freq, open_trials=open_trial_freq, closed_trials=closed_trial_freq,
                            project_year_freq=project_year_freq, open_projects=open_project_freq, closed_projects=closed_project_freq,
-                           ticket_year_freq=ticket_year_freq, open_tickets=open_ticket_freq, closed_tickets=closed_ticket_freq,)
+                           ticket_year_freq=ticket_year_freq, open_tickets=open_ticket_freq, closed_tickets=closed_ticket_freq,
+                           username=username)
 
 
 
