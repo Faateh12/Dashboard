@@ -4,7 +4,7 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 import datetime
 import jwt
 
-application = Flask(__name__)
+application = Flask(__name__, template_folder="Templates")
 application.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://Faateh:Faateh123@dashboard-db.cwvdgyt4btit.us-east-1.rds.amazonaws.com:5432/dashboard_db'
 application.config['SECRET_KEY'] = 'secret!'
 application.config['SQLALCHEMY_BINDS'] = {
