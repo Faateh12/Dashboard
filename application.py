@@ -275,6 +275,8 @@ def home():
     current = current_user._get_current_object()
     if " " in current.name:
         username = current.name.split(" ")[0].capitalize()
+    else:
+        username = current.name
     rmas = RmaTool.query.order_by(RmaTool.MAT_RMA_ID).all()
     rma_id_list = []
     for rma in rmas:
