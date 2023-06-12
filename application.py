@@ -314,7 +314,7 @@ def home():
     # Trials live counter
     trials = Trials.query.order_by(Trials.trial_id).all()
     trial_year_list = [item.trial_year for item in trials if item.trial_year != '']
-    print(trial_year_list)
+
     trial_year_freq = {}
     for item in trial_year_list:
         if item in trial_year_freq:
