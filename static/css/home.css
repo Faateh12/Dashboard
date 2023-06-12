@@ -108,3 +108,11 @@ tbody tr:hover {
 .row {
   margin-left: 50px;
 }
+
+.sidebar ul li:hover {
+    background-color: #f5f5f5;
+}
+
+.sidebar ul li:hover a {
+    color: #000;
+}
