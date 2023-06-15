@@ -9,16 +9,20 @@ body {
     left: 0;
     right: 0;
     z-index: 3;
-    background-color: #f8f9fa;
+    background-color: #16468e;
 }
 
 
 .navbar-brand {
-    color: #333;
+    color: #fff;
     font-weight: 1000;
     margin-left: 50%;
     transform: translate(-50%);
     font-size: 1.3rem;
+}
+
+.navbar-light .navbar-brand {
+    color: #fff;
 }
 
 .sidebar {
@@ -71,6 +75,7 @@ body {
     font-size: 1.2rem;
     font-weight: bold;
     margin-bottom: 1rem;
+    text-align: center;
 }
 
 table {
@@ -119,3 +124,5 @@ tbody tr:hover {
 .sidebar ul li:hover a {
     color: #000;
 }
+
+
