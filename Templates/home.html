@@ -64,126 +64,106 @@
 
         <div class="container">
             <div class="row" style="padding-top: 40px;">
-                <div class="card d-inline-block">
-                    <div class="card-body">
-                        <h5 class="card-title">Trials</h5>
-                        <table id="app4-table" class="table table-striped">
-                            <thead style="background-color: #D3D3D3">
-                                <tr>
-                                    <th>Status</th>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Trials</h5>
+                            <table id="app4-table" class="table table-striped">
+                                <thead style="background-color: #D3D3D3">
+                                    <tr>
+                                        <th>Year</th>
+                                        <th>Open</th>
+                                        <th>Completed</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
                                     {% for year, count in trial_year_freq.items() %}
-                                        <th>{{ year }}</th>
-                                    {% endfor %}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Open</td>
-                                    {% for year, count in trial_year_freq.items() %}
+                                      <tr>
+                                        <td>{{ year }}</td>
                                         <td>{{ open_trials[year]|default(0) }}</td>
-                                    {% endfor %}
-                                </tr>
-                                <tr>
-                                    <td>Completed</td>
-                                    {% for year, count in trial_year_freq.items() %}
                                         <td>{{ closed_trials[year]|default(0) }}</td>
+                                      </tr>
                                     {% endfor %}
-                                </tr>
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-<!--            </div>-->
-<!--            <div class="row justify-content-center">-->
-                <div class="card d-inline-block">
-                    <div class="card-body">
-                        <h5 class="card-title">RMA's</h5>
-                        <table id="app1-table" class="table table-striped">
-                            <thead style="background-color: #e9ecef;">
-                                <tr>
-                                    <th>Status</th>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">RMA's</h5>
+                            <table id="app1-table" class="table table-striped">
+                                <thead style="background-color: #e9ecef;">
+                                    <tr>
+                                        <th>Year</th>
+                                        <th>Open</th>
+                                        <th>Resolved</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
                                     {% for year, count in year_freq.items() %}
-                                        <th>{{ year }}</th>
-                                    {% endfor %}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Open</td>
-                                    {% for year, count in year_freq.items() %}
+                                      <tr>
+                                        <td>{{ year }}</td>
                                         <td>{{ open_rmas[year]|default(0) }}</td>
-                                    {% endfor %}
-                                </tr>
-                                <tr>
-                                    <td>Resolved</td>
-                                    {% for year, count in year_freq.items() %}
                                         <td>{{ closed_rmas[year]|default(0) }}</td>
-                                    {% endfor %}
-                                </tr>
-                            </tbody>
-                        </table>
+                                      </tr>
+                                  {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="card d-inline-block">
-                    <div class="card-body">
-                        <h5 class="card-title">Projects</h5>
-                        <table id="app3-table" class="table table-striped">
-                            <thead style="background-color: #ADD8E6;">
-                                <tr>
-                                    <th>Status</th>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Projects</h5>
+                            <table id="app3-table" class="table table-striped">
+                                <thead style="background-color: #ADD8E6;">
+                                    <tr>
+                                        <th>Year</th>
+                                        <th>Open</th>
+                                        <th>Completed</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
                                     {% for year, count in project_year_freq.items() %}
-                                        <th>{{ year }}</th>
+                                      <tr>
+                                        <td>{{ year }}</td>
+                                        <td>{{ open_projects[year]|default(0) }}</td>
+                                        <td>{{ closed_projects[year]|default(0) }}</td>
+                                      </tr>
                                     {% endfor %}
-                                </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td>Open</td>
-                                {% for year, count in project_year_freq.items() %}
-                                    <td>{{ open_projects[year]|default(0) }}</td>
-                                {% endfor %}
-                              </tr>
-                              <tr>
-                                <td>Completed</td>
-                                {% for year, count in project_year_freq.items() %}
-                                    <td>{{ closed_projects[year]|default(0) }}</td>
-                                {% endfor %}
-                              </tr>
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-<!--            </div>-->
-<!--            <div class="row justify-content-center">-->
-                <div class="card d-inline-block" style="margin-left: 305px;">
-                    <div class="card-body">
-                        <h5 class="card-title">Tech Support Tickets</h5>
-                        <table id="app2-table" class="table table-striped">
-                            <thead style="background-color: #f5deb3;">
-                                <tr>
-                                    <th>Status</th>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Tech Support Tickets</h5>
+                            <table id="app2-table" class="table table-striped">
+                                <thead style="background-color: #f5deb3;">
+                                    <tr>
+                                        <th>Year</th>
+                                        <th>Open</th>
+                                        <th>Completed</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
                                     {% for year, count in ticket_year_freq.items() %}
-                                        <th>{{ year }}</th>
+                                      <tr>
+                                        <td>{{ year }}</td>
+                                        <td>{{ open_tickets[year]|default(0) }}</td>
+                                        <td>{{ closed_tickets[year]|default(0) }}</td>
+                                      </tr>
                                     {% endfor %}
-                                </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td>Open</td>
-                                {% for year, count in ticket_year_freq.items() %}
-                                    <td>{{ open_tickets[year]|default(0) }}</td>
-                                {% endfor %}
-                              </tr>
-                              <tr>
-                                <td>Completed</td>
-                                {% for year, count in ticket_year_freq.items() %}
-                                    <td>{{ closed_tickets[year]|default(0) }}</td>
-                                {% endfor %}
-                              </tr>
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
