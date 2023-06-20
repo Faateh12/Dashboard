@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, request, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-import datetime
+from datetime import datetime
 import jwt
 
 application = Flask(__name__, template_folder="Templates")
@@ -270,6 +270,9 @@ def login():
 @application.route('/home')
 @login_required
 def home():
+    now = datetime.now()
+    current_year = now.year
+    current_year_last_two_digits = str(current_year)[-2:]
     # RMA Live counter
     username = None
     current = current_user._get_current_object()
@@ -278,9 +281,42 @@ def home():
     else:
         username = current.name
     rmas = RmaTool.query.order_by(RmaTool.MAT_RMA_ID).all()
+    resolved = []
+    diff_days_dict = {}
+    month_count_dict = {}
+    for item in rmas:
+        if current_year_last_two_digits in item.DATE_RESOLVED:
+            # Check the length of the year in DATE_RMA_RECEIVED and DATE_RESOLVED
+            # Use the correct format accordingly
+            format_received = '%m/%d/%Y' if len(item.DATE_RMA_RECEIVED.split('/')[-1]) == 4 else '%m/%d/%y'
+            format_resolved = '%m/%d/%Y' if len(item.DATE_RESOLVED.split('/')[-1]) == 4 else '%m/%d/%y'
+
+            received_date = datetime.strptime(item.DATE_RMA_RECEIVED, format_received)
+            resolved_date = datetime.strptime(item.DATE_RESOLVED, format_resolved)
+
+            # Calculate difference in days
+            diff_days = (resolved_date - received_date).days
+
+            month_name = resolved_date.strftime('%B')
+
+            # Add or update in the dictionary
+            diff_days_dict[month_name] = diff_days_dict.get(month_name, 0) + diff_days
+            month_count_dict[month_name] = month_count_dict.get(month_name, 0) + 1
+
+            resolved.append(
+                (received_date.strftime('%m/%d/%Y'), resolved_date.strftime('%m/%d/%Y'), month_name, diff_days))
+
+    # Calculate averages and round to nearest int
+    averages = {month: round(diff_days_dict[month] / month_count_dict[month]) for month in diff_days_dict}
+
+    # Sort dictionary by month
+    averages_sorted = dict(sorted(averages.items(), key=lambda x: datetime.strptime(x[0], "%B")))
+
+    # Print the sorted averages dictionary
     rma_id_list = []
     for rma in rmas:
         rma_id_list.append(rma.MAT_RMA_ID)
+
     year_freq = {}
     for item in rma_id_list:
         year = item.split('-')[2]  # Extract the year from the ID
@@ -406,7 +442,8 @@ def home():
                            trial_year_freq=trial_year_freq, open_trials=open_trial_freq, closed_trials=closed_trial_freq,
                            project_year_freq=project_year_freq, open_projects=open_project_freq, closed_projects=closed_project_freq,
                            ticket_year_freq=ticket_year_freq, open_tickets=open_ticket_freq, closed_tickets=closed_ticket_freq,
-                           username=username)
+                           username=username, labels=list(averages_sorted.keys()), data=list(averages_sorted.values()),
+                           current_year=current_year)
 
 
 
