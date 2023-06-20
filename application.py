@@ -285,26 +285,27 @@ def home():
     diff_days_dict = {}
     month_count_dict = {}
     for item in rmas:
-        if current_year_last_two_digits in item.DATE_RESOLVED:
-            # Check the length of the year in DATE_RMA_RECEIVED and DATE_RESOLVED
-            # Use the correct format accordingly
-            format_received = '%m/%d/%Y' if len(item.DATE_RMA_RECEIVED.split('/')[-1]) == 4 else '%m/%d/%y'
-            format_resolved = '%m/%d/%Y' if len(item.DATE_RESOLVED.split('/')[-1]) == 4 else '%m/%d/%y'
+        if item.DATE_RESOLVED is not None:
+            if current_year_last_two_digits in item.DATE_RESOLVED:
+                # Check the length of the year in DATE_RMA_RECEIVED and DATE_RESOLVED
+                # Use the correct format accordingly
+                format_received = '%m/%d/%Y' if len(item.DATE_RMA_RECEIVED.split('/')[-1]) == 4 else '%m/%d/%y'
+                format_resolved = '%m/%d/%Y' if len(item.DATE_RESOLVED.split('/')[-1]) == 4 else '%m/%d/%y'
 
-            received_date = datetime.strptime(item.DATE_RMA_RECEIVED, format_received)
-            resolved_date = datetime.strptime(item.DATE_RESOLVED, format_resolved)
+                received_date = datetime.strptime(item.DATE_RMA_RECEIVED, format_received)
+                resolved_date = datetime.strptime(item.DATE_RESOLVED, format_resolved)
 
-            # Calculate difference in days
-            diff_days = (resolved_date - received_date).days
+                # Calculate difference in days
+                diff_days = (resolved_date - received_date).days
 
-            month_name = resolved_date.strftime('%B')
+                month_name = resolved_date.strftime('%B')
 
-            # Add or update in the dictionary
-            diff_days_dict[month_name] = diff_days_dict.get(month_name, 0) + diff_days
-            month_count_dict[month_name] = month_count_dict.get(month_name, 0) + 1
+                # Add or update in the dictionary
+                diff_days_dict[month_name] = diff_days_dict.get(month_name, 0) + diff_days
+                month_count_dict[month_name] = month_count_dict.get(month_name, 0) + 1
 
-            resolved.append(
-                (received_date.strftime('%m/%d/%Y'), resolved_date.strftime('%m/%d/%Y'), month_name, diff_days))
+                resolved.append(
+                    (received_date.strftime('%m/%d/%Y'), resolved_date.strftime('%m/%d/%Y'), month_name, diff_days))
 
     # Calculate averages and round to nearest int
     averages = {month: round(diff_days_dict[month] / month_count_dict[month]) for month in diff_days_dict}
