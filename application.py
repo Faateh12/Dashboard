@@ -124,10 +124,9 @@ class TechSupport(db.Model):
     status = db.Column(db.String(255))
     resolution_date = db.Column(db.String(255))
     resolution_eta = db.Column(db.String(255))
-    Priority = db.Column(db.String(255))
     ticket_year = db.Column(db.String(100))
     open_closed = db.Column(db.String(255))
-
+    age = db.Column(db.String(255))
 class Trials(db.Model):
     __bind_key__ = 'database3'
     # Define your model fields and relationships
