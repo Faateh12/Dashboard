@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from datetime import datetime
 import jwt
+from flask_mail import Mail, Message
 
 application = Flask(__name__, template_folder="Templates")
 application.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://Faateh:Faateh123@dashboard-db.cwvdgyt4btit.us-east-1.rds.amazonaws.com:5432/dashboard_db'
@@ -13,10 +14,17 @@ application.config['SQLALCHEMY_BINDS'] = {
     'database3': 'postgresql://Faateh:Faateh123@trials-db.cwvdgyt4btit.us-east-1.rds.amazonaws.com:5432/test_db',
     'database4': 'postgresql://Faateh:Faateh123@projects-db.cwvdgyt4btit.us-east-1.rds.amazonaws.com:5432/projecttool_db'
 }
+application.config['MAIL_SERVER'] = 'smtp.gmail.com'
+application.config['MAIL_PORT'] = 587
+application.config['MAIL_USE_TLS'] = True
+application.config['MAIL_USERNAME'] = 'matsingtools@gmail.com'
+application.config['MAIL_PASSWORD'] = 'lvfnjwubxveklhjc'
+application.config['MAIL_DEFAULT_SENDER'] = 'matsingtools@gmail.com'
 db = SQLAlchemy(application)
 login_manager = LoginManager(application)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
+mail = Mail(application)
 
 class RmaTool(db.Model):
     __bind_key__ = 'database1'
@@ -181,6 +189,26 @@ def generate_token(user_email):
     payload = {'user_email': user_email}
     token = jwt.encode(payload, 'secret_key', algorithm='HS256')
     return token
+
+def send_error_email(error, is_local=False):
+    if is_local:
+        recipients = ['faateh.work@gmail.com']
+        subject = 'Error on Tech Support tool local host'
+    else:
+        recipients = ['faateh.work@gmail.com']
+        subject = 'Error on Tech Support tool'
+
+    msg = Message(subject, recipients=recipients)
+    msg.html = render_template('error_email.html', error=error)
+
+    mail.send(msg)
+
+@application.errorhandler(500)
+def internal_server_error(error):
+    is_local = request.host == '127.0.0.1:5000'
+    send_error_email(error, is_local)
+    return render_template('500.html'), 500
+
 
 @application.route('/logout')
 @login_required
