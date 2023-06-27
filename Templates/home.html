@@ -186,6 +186,16 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Trouble Tickets Status Breakdown</h5>
+                            <canvas id="barChart2"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <!-- Include necessary JavaScript code -->
@@ -265,6 +275,74 @@
             },
             options: {
                 responsive: true
+            }
+        });
+        // Get the canvas element
+        var barChartCanvas = document.getElementById('barChart2').getContext('2d');
+
+        // Access the Jinja variable holding the stage frequency data
+        var status_freq = {{ status_freq | tojson }};
+
+        var labels = Object.keys(status_freq);
+        var data = Object.values(status_freq);
+        var colors = [];
+        for (var i = 0; i < data.length; i++) {
+          var randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
+          colors.push(randomColor);
+        }
+
+        // Create the bar chart
+        var barChart = new Chart(barChartCanvas, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: colors,
+                    barThickness: 40, // Adjust the bar thickness as desired
+                    borderRadius: 3, // Add rounded corners to the bars
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Tickets',
+                            color: '#191970',
+                            font: {
+                                family: 'Montserrat',
+                                size: 20
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                layout: {
+                    padding: {
+                        left: 10,
+                        right: 10,
+                        top: 10,
+                        bottom: 10
+                    }
+                },
+                interaction: {
+                    intersect: false
+                },
+                tooltips: {
+                    enabled: false
+                },
+                elements: {
+                    bar: {
+                        borderSkipped: 'end' // Add 3D effect by skipping the border at the end
+                    }
+                }
             }
         });
     </script>

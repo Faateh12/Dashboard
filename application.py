@@ -5,6 +5,7 @@ from datetime import datetime
 import jwt
 from flask_mail import Mail, Message
 from collections import Counter
+import re
 
 application = Flask(__name__, template_folder="Templates")
 application.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://Faateh:Faateh123@dashboard-db.cwvdgyt4btit.us-east-1.rds.amazonaws.com:5432/dashboard_db'
@@ -217,16 +218,17 @@ def internal_server_error(error):
     return render_template('500.html'), 500
 
 # with application.app_context():
-#     trials = Trials.query.all()
-#     stages = [item.stage for item in trials if item.stage]
-#     stage_freq = {}
-#     for i in stages:
-#         if i not in stage_freq:
-#             stage_freq[i] = 1
+#     tickets_count = TechSupport.query.all()
+#     status_list = []
+#     for item in tickets_count:
+#         status = re.sub('<[^<]+?>', '', item.status)  # Remove HTML tags using regex
+#         status_list.append(status)
+#     status_freq = {}
+#     for i in status_list:
+#         if i not in status_freq:
+#             status_freq[i] = 1
 #         else:
-#             stage_freq[i] += 1
-#     print(stage_freq)
-
+#             status_freq[i] += 1
 
 @application.route('/logout')
 @login_required
@@ -491,13 +493,23 @@ def home():
             stage_freq[i] = 1
         else:
             stage_freq[i] += 1
-
+    tickets_count = TechSupport.query.all()
+    status_list = []
+    for item in tickets_count:
+        status = re.sub('<[^<]+?>', '', item.status)  # Remove HTML tags using regex
+        status_list.append(status)
+    status_freq = {}
+    for i in status_list:
+        if i not in status_freq:
+            status_freq[i] = 1
+        else:
+            status_freq[i] += 1
     return render_template("home.html", year_freq=year_freq, closed_rmas=closed_rma_freq, open_rmas=open_rma_freq,
                            trial_year_freq=trial_year_freq, open_trials=open_trial_freq, closed_trials=closed_trial_freq,
                            project_year_freq=project_year_freq, open_projects=open_project_freq, closed_projects=closed_project_freq,
                            ticket_year_freq=ticket_year_freq, open_tickets=open_ticket_freq, closed_tickets=closed_ticket_freq,
                            username=username, labels=list(averages_sorted.keys()), data=list(averages_sorted.values()),
-                           current_year=current_year, stage_freq=stage_freq)
+                           current_year=current_year, stage_freq=stage_freq, status_freq=status_freq)
 
 
 
