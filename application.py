@@ -345,7 +345,7 @@ def home():
     for rma in rmas:
         rma_id_list.append(rma.MAT_RMA_ID)
 
-    year_freq = {}
+    year_freq = {'2019': 0, '2020': 0}
     for item in rma_id_list:
         year = item.split('-')[2]  # Extract the year from the ID
         if year in year_freq:
