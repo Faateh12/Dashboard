@@ -67,31 +67,6 @@
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Trials</h5>
-                            <table id="app4-table" class="table table-striped">
-                                <thead style="background-color: #D3D3D3">
-                                    <tr>
-                                        <th>Year</th>
-                                        <th>Open</th>
-                                        <th>Completed</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for year, count in trial_year_freq.items() %}
-                                      <tr>
-                                        <td>{{ year }}</td>
-                                        <td>{{ open_trials[year]|default(0) }}</td>
-                                        <td>{{ closed_trials[year]|default(0) }}</td>
-                                      </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-body">
                             <h5 class="card-title">RMA's</h5>
                             <table id="app1-table" class="table table-striped">
                                 <thead style="background-color: #e9ecef;">
@@ -109,6 +84,31 @@
                                         <td>{{ closed_rmas[year]|default(0) }}</td>
                                       </tr>
                                   {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Trials</h5>
+                            <table id="app4-table" class="table table-striped">
+                                <thead style="background-color: #D3D3D3">
+                                    <tr>
+                                        <th>Year</th>
+                                        <th>Open</th>
+                                        <th>Completed</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for year, count in trial_year_freq.items() %}
+                                      <tr>
+                                        <td>{{ year }}</td>
+                                        <td>{{ open_trials[year]|default(0) }}</td>
+                                        <td>{{ closed_trials[year]|default(0) }}</td>
+                                      </tr>
+                                    {% endfor %}
                                 </tbody>
                             </table>
                         </div>
