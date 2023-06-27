@@ -61,7 +61,6 @@
                 </li>
             </ul>
         </div>
-
         <div class="container">
             <div class="row" style="padding-top: 40px;">
                 <div class="col-md-6">
@@ -177,6 +176,16 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card text-center">
+                        <div class="card-body" style="width: 60%; margin-left: 190px;">
+                            <h5 class="card-title">Trials Composition</h5>
+                            <canvas id="pieChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <!-- Include necessary JavaScript code -->
@@ -231,6 +240,31 @@
                         }
                     }
                 }
+            }
+        });
+        // Get the canvas element
+        var pieChartCanvas = document.getElementById('pieChart').getContext('2d');
+
+        // Access the Jinja variable holding the stage frequency data
+        var stage_freq = {{ stage_freq | tojson }};
+
+        var labels = Object.keys(stage_freq);
+        var data = Object.values(stage_freq);
+        var colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#FF9F40', '#9966FF']; // Sample colors
+
+
+        // Create the pie chart
+        var pieChart = new Chart(pieChartCanvas, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: colors,
+                }]
+            },
+            options: {
+                responsive: true
             }
         });
     </script>

@@ -125,4 +125,9 @@ tbody tr:hover {
     color: #000;
 }
 
+.center-card-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
