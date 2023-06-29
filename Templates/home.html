@@ -217,7 +217,7 @@
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Data',
+                    label: 'Days',
                     data: data,
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
@@ -249,7 +249,12 @@
                             }
                         }
                     }
-                }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
             }
         });
         // Get the canvas element
