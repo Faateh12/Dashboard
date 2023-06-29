@@ -180,7 +180,7 @@
                 <div class="col-md-12">
                     <div class="card text-center">
                         <div class="card-body" style="width: 60%; margin-left: 190px;">
-                            <h5 class="card-title">Trials Composition</h5>
+                            <h5 class="card-title">Trials Stage</h5>
                             <canvas id="pieChart"></canvas>
                         </div>
                     </div>
@@ -286,9 +286,33 @@
         var labels = Object.keys(status_freq);
         var data = Object.values(status_freq);
         var colors = [];
-        for (var i = 0; i < data.length; i++) {
-          var randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
-          colors.push(randomColor);
+        for (var i = 0; i < labels.length; i++) {
+          var label = labels[i];
+          var color;
+
+          switch (label) {
+            case 'Completed':
+              color = 'green';
+              break;
+            case 'Unassigned':
+              color = 'red';
+              break;
+            case 'With Scott':
+              color = 'orange';
+              break;
+            case 'With Yasir':
+              color = '#00bfff';
+              break;
+            case 'With Olga':
+              color = 'pink';
+              break;
+            default:
+              // Use a random color if the label doesn't match any specified case
+              color = '#' + Math.floor(Math.random() * 16777215).toString(16);
+              break;
+          }
+
+          colors.push(color);
         }
 
         // Create the bar chart
