@@ -217,18 +217,16 @@ def internal_server_error(error):
     send_error_email(error, is_local)
     return render_template('500.html'), 500
 
-# with application.app_context():
-#     tickets_count = TechSupport.query.all()
-#     status_list = []
-#     for item in tickets_count:
-#         status = re.sub('<[^<]+?>', '', item.status)  # Remove HTML tags using regex
-#         status_list.append(status)
-#     status_freq = {}
-#     for i in status_list:
-#         if i not in status_freq:
-#             status_freq[i] = 1
-#         else:
-#             status_freq[i] += 1
+with application.app_context():
+    trials_counter = Trials.query.all()
+    stages = [item.stage for item in trials_counter if item.stage]
+    stage_freq = {}
+    for i in stages:
+        if i not in stage_freq:
+            stage_freq[i] = 1
+        else:
+            stage_freq[i] += 1
+    print(stage_freq)
 
 @application.route('/logout')
 @login_required
