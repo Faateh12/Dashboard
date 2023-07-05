@@ -201,10 +201,10 @@ def generate_token(user_email):
 def send_error_email(error, is_local=False):
     if is_local:
         recipients = ['faateh.work@gmail.com']
-        subject = 'Error on Tech Support tool local host'
+        subject = 'Error on Dashboard local host'
     else:
         recipients = ['faateh.work@gmail.com']
-        subject = 'Error on Tech Support tool'
+        subject = 'Error on Dashboard'
 
     msg = Message(subject, recipients=recipients)
     msg.html = render_template('error_email.html', error=error)
@@ -217,16 +217,16 @@ def internal_server_error(error):
     send_error_email(error, is_local)
     return render_template('500.html'), 500
 
-with application.app_context():
-    trials_counter = Trials.query.all()
-    stages = [item.stage for item in trials_counter if item.stage]
-    stage_freq = {}
-    for i in stages:
-        if i not in stage_freq:
-            stage_freq[i] = 1
-        else:
-            stage_freq[i] += 1
-    print(stage_freq)
+# with application.app_context():
+#     trials_counter = Trials.query.all()
+#     stages = [item.stage for item in trials_counter if item.stage]
+#     stage_freq = {}
+#     for i in stages:
+#         if i not in stage_freq:
+#             stage_freq[i] = 1
+#         else:
+#             stage_freq[i] += 1
+#     print(stage_freq)
 
 @application.route('/logout')
 @login_required
@@ -266,6 +266,14 @@ def app_login_projects():
     email = current.email
     token = generate_token(user_email=email)
     link = f'https://matsing-projects.com/?token={token}'
+    return redirect(link)
+
+@application.route('/inventory-login')
+def app_login_inventory():
+    current = current_user._get_current_object()
+    email = current.email
+    token = generate_token(user_email=email)
+    link = f'https://matsing-inventory.com/?token={token}'
     return redirect(link)
 
 

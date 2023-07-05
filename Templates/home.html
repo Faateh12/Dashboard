@@ -59,6 +59,12 @@
                         <span>Projects Tracker</span>
                     </a>
                 </li>
+                <li>
+                    <a href="{{ url_for('app_login_inventory') }}" target="_blank">
+                        <i class="fas fa-box-open"></i>
+                        <span>Inventory Tracker</span>
+                    </a>
+                </li>
             </ul>
         </div>
         <div class="container">
@@ -359,6 +365,7 @@
 
         var labels = Object.keys(status_freq);
         var data = Object.values(status_freq);
+        var maxY = Math.max(...data) + 2;
         var colors = [];
         for (var i = 0; i < labels.length; i++) {
           var label = labels[i];
@@ -379,6 +386,12 @@
               break;
             case 'With Olga':
               color = 'pink';
+              break;
+            case 'With Pavel':
+              color = 'grey';
+              break;
+            case 'Cancelled':
+              color = 'purple';
               break;
             default:
               // Use a random color if the label doesn't match any specified case
@@ -406,6 +419,11 @@
                 scales: {
                     y: {
                         beginAtZero: true,
+                        min: 0,
+                        max: maxY,
+                        ticks: {
+                          stepSize: 2 // Set the step size to 1
+                        },
                         title: {
                             display: true,
                             text: 'Number of Tickets',
