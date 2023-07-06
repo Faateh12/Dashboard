@@ -237,6 +237,8 @@
                         'rgba(255, 206, 86, 1)',
                         'rgba(75, 192, 192, 1)'
                     ],
+                    barThickness: 50, // Adjust the bar thickness as desired
+<!--                    borderRadius: 3, // Add rounded corners to the bars-->
                     borderWidth: 1
                 }]
             },
@@ -272,6 +274,7 @@
         var data = Object.values(stage_freq);
         var colors = ['#B22222', '#708238', '#16468e', '#4BC0C0', '#FF9F40', '#9966FF']; // Sample colors-->
 
+
         var maxY = Math.max(...data) + 1;
 
         // Create the bar chart
@@ -283,8 +286,9 @@
                     label: 'Trials',
                     data: data,
                     backgroundColor: colors,
-                    barThickness: 45, // Adjust the bar thickness as desired
-                    borderRadius: 3, // Add rounded corners to the bars
+                    barThickness: 50, // Adjust the bar thickness as desired
+<!--                    borderRadius: 3, // Add rounded corners to the bars-->
+                    borderWidth: 1
                 }]
             },
             options: {
@@ -410,8 +414,9 @@
                 datasets: [{
                     data: data,
                     backgroundColor: colors,
-                    barThickness: 40, // Adjust the bar thickness as desired
-                    borderRadius: 3, // Add rounded corners to the bars
+                    barThickness: 50, // Adjust the bar thickness as desired
+<!--                    borderRadius: 3, // Add rounded corners to the bars-->
+                    borderWidth: 1
                 }]
             },
             options: {
